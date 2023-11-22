@@ -7,3 +7,35 @@
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
 }
+
+body{
+  background-color: #EFDECD
+}
+
+.eye-container {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin: 5px;
+}
+
+.eye {
+  width: 30px;
+  height: 30px;
+  background-color: white;
+  border-radius: 50%;
+  position: relative;
+  overflow: hidden; /* Keep the pupil inside the eye */
+}
+
+.pupil {
+  width: 10px;
+  height: 10px;
+  background-color: black;
+  border-radius: 50%;
+  position: absolute;
+  left: 50%; /* Center the pupil */
+  top: 50%; /* Center the pupil */
+  transform-origin: center; /* Pupil rotation around its center */
+}
+

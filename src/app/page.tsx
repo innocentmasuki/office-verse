@@ -3,7 +3,7 @@ import {characters, walls} from "@/utils/data";
 
 export default function Home() {
   return (
-      <main className={"overflow-hidden h-screen w-screen"}>
+      <main className={"h-full w-full"}>
         <Game characters={characters} walls={walls}/>
       </main>
   )

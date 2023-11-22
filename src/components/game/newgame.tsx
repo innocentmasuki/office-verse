@@ -14,9 +14,17 @@ type GameProps = {
 export const Game: React.FC<GameProps> = ({characters, walls}) => {
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
     const [windowHeight, setWindowHeight] = useState(window.innerHeight);
-    const [character, setCharacter] = useState<CharacterProps>({id: "", name: "", position: {x: 500, y: 400}, color:"#14b8bd"})
+    const [character, setCharacter] = useState<CharacterProps>({
+        id: "",
+        name: "",
+        position: {x: 500, y: 400},
+        color: "#14b8bd",
+        gender: "male"
+    })
     const [currentRoom, setCurrentRoom] = useState<{ room: string; character: CharacterProps } | undefined>(undefined)
     const speed: number = 10;
+    const [direction, setDirection] = useState<"right" | "left">("right")
+
     useEffect(() => {
         const handleResize = () => {
             setWindowWidth(window.innerWidth);
@@ -49,9 +57,11 @@ export const Game: React.FC<GameProps> = ({characters, walls}) => {
                 break;
             case 'ArrowLeft':
                 newPosition.x -= speed;
+                setDirection("left")
                 break;
             case 'ArrowRight':
                 newPosition.x += speed;
+                setDirection("right")
                 break;
             default:
                 return;
@@ -74,7 +84,6 @@ export const Game: React.FC<GameProps> = ({characters, walls}) => {
 
     function handleJoinRoom({character, room}: { character: CharacterProps; room: string }) {
         console.log('Joining room', room);
-        console.table(character)
         setCurrentRoom({room, character})
     }
 
@@ -94,8 +103,24 @@ export const Game: React.FC<GameProps> = ({characters, walls}) => {
                     <h1 className={"text-2xl font-bold"}>Office-verse</h1>
                     <input className={"px-4 py-2"} value={character.name} type={"text"} placeholder={"Name"}
                            onChange={(e) => setCharacter({...character, name: e.target.value})}/>
-                    <input value={character.color} className={"w-full h-10"} type={"color"} onChange={(e) => setCharacter({...character, color: e.target.value})}/>
-                    <button disabled={!character.name} className={"bg-black disabled:bg-gray-400 disabled:cursor-not-allowed px-4 py-2 text-white"} onClick={() => setCharacter({...character, id: uuidv4()})}>Submit</button>
+                    <div className={"flex flex-row"}>
+                        <input type={"radio"} checked={character.gender === "male"} name={"gender"} value={"male"}
+                               onChange={(e) => setCharacter({
+                                   ...character,
+                                   gender: e.target.value as "male" | "female"
+                               })}/>
+                        <input type={"radio"} checked={character.gender === "female"} name={"gender"} value={"female"}
+                               onChange={(e) => setCharacter({
+                                   ...character,
+                                   gender: e.target.value as "male" | "female"
+                               })}/>
+                    </div>
+                    <input value={character.color} className={"w-full h-10"} type={"color"}
+                           onChange={(e) => setCharacter({...character, color: e.target.value})}/>
+                    <button disabled={!character.name}
+                            className={"bg-black disabled:bg-gray-400 disabled:cursor-not-allowed px-4 py-2 text-white"}
+                            onClick={() => setCharacter({...character, id: uuidv4()})}>Submit
+                    </button>
                 </div>
             </div>)
     }
@@ -115,7 +140,7 @@ export const Game: React.FC<GameProps> = ({characters, walls}) => {
             {[character, ...characters].map((character) => {
                 const otherCharacters = characters.filter((c) => c.id !== character.id);
                 return (
-                    <Character currentRoom={currentRoom} onLeaveRoom={handleLeaveRoom} onJoinRoom={handleJoinRoom}
+                    <Character direction={direction} currentRoom={currentRoom} onLeaveRoom={handleLeaveRoom} onJoinRoom={handleJoinRoom}
                                key={character.id}
                                character={character} otherCharacters={otherCharacters}/>
                 )

@@ -11,7 +11,8 @@ export type CharacterProps = {
     position: { x: number, y: number }
     name: string
     otherCharacters?: { id: string; position: { x: number, y: number }, name: string }[]
-    color: string
+    color: string;
+    gender: "male"|"female";
 }
 
 export const CHARACTER_HEIGHT = 70;
@@ -23,12 +24,13 @@ type CharacterComponentProps = {
     onJoinRoom: ({character, room}: { character: CharacterProps; room: string }) => void;
     onLeaveRoom: () => void;
     currentRoom: { room: string; character: CharacterProps} | undefined;
+    direction: "right" | "left";
 }
 
 const socket = io('http://localhost:3001');
 
 
-export const Character = ({character, onJoinRoom,currentRoom, onLeaveRoom, otherCharacters}: CharacterComponentProps) => {
+export const Character = ({character,direction, onJoinRoom,currentRoom, onLeaveRoom, otherCharacters}: CharacterComponentProps) => {
 
     const [interactionStatus, setInteractionStatus] = useState(false);
     const [messages, setMessages] = useState<string[]>([]);
@@ -36,6 +38,10 @@ export const Character = ({character, onJoinRoom,currentRoom, onLeaveRoom, other
     const [roomId, setRoomId] = useState("")
     const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
     const eyeContainerRef = useRef(null);
+
+    useEffect(() => {
+        console.log(direction)
+    }, [direction]);
 
     useEffect(() => {
         const handleMouseMove = (e: { clientX: number; clientY: number; }) => {
@@ -132,7 +138,7 @@ export const Character = ({character, onJoinRoom,currentRoom, onLeaveRoom, other
     position: 'absolute',
     left: character.position.x,
     top: character.position.y,}}>
-    <Image  src={chat} alt={"chatting..."} className={" "} height={24}
+    <Image  src={chat} alt={"chatting..."} className={"z-20 "} height={24}
             width={24}/>
 </div>}
             <div
@@ -147,11 +153,11 @@ export const Character = ({character, onJoinRoom,currentRoom, onLeaveRoom, other
                     height: CHARACTER_HEIGHT,
                     backgroundColor: character.color ,
                 }} onClick={() => sendMessage('Hello from ' + character.name)}
-                     className={"relative group  p-2 rounded   border-2 border-black"}>
+                     className={`relative group  p-2 rounded-b rounded-t-2xl ${(currentRoom?.character.id === character.id && direction === "left" ? "rounded-tl-3xl": "rounded-tr-3xl")}   border-2 border-black`}>
                     <div
-                        className={"text-[9px] hidden group-hover:block duration-150  font-bold"}> {character.name}</div>
+                        className={"text-[9px] hidden group-hover:block duration-150 truncate font-bold"}> {character.name}</div>
 
-                    <div className="eye-container absolute" ref={eyeContainerRef}>
+                    <div className={`eye-container  absolute ${ (currentRoom?.character.id === character.id && direction === "left" ? "-left-10": "left-0")} `} ref={eyeContainerRef}>
                         <div className="eye">
                             <div className="pupil" style={{ transform: `translate(${mousePosition.x}px, ${mousePosition.y}px)` }}></div>
                         </div>
@@ -159,7 +165,7 @@ export const Character = ({character, onJoinRoom,currentRoom, onLeaveRoom, other
                             <div className="pupil" style={{ transform: `translate(${mousePosition.x}px, ${mousePosition.y}px)` }}></div>
                         </div>
                     </div>
-
+                   <div className={` ${character.gender === "male" ? "bg-blue-800 ":" bg-pink-800" } absolute tie h-4 w-4 ${ (currentRoom?.character.id === character.id && direction === "left" ? "left-[25px]": "left-[45px]")}   bottom-[5px]`}></div>
                 </div>
             </div>
         </>

@@ -4,25 +4,34 @@ import React, {useEffect, useState, KeyboardEvent} from 'react';
 import {Wall, WallProps} from "@/components/game/wall";
 import {Character, CHARACTER_HEIGHT, CHARACTER_WIDTH, CharacterProps} from "@/components/game/character";
 import {v4 as uuidv4} from 'uuid';
+import {Chats} from "@/components/game/chats";
+import {IoCall, IoCloseSharp, IoVideocam} from "react-icons/io5";
+import io from "socket.io-client";
 
 type GameProps = {
     characters: CharacterProps[];
     walls: WallProps[];
 };
 
+export const gameSocket = io('http://localhost:3001');
+
 
 export const Game: React.FC<GameProps> = ({characters, walls}) => {
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
     const [windowHeight, setWindowHeight] = useState(window.innerHeight);
+    const [messages, setMessages] = useState<string[]>([]);
     const [character, setCharacter] = useState<CharacterProps>({
-        id: "",
-        name: "",
+        id: "kkhds",
+        name: "Idino",
         position: {x: 500, y: 400},
         color: "#14b8bd",
         gender: "male"
     })
-    const [showChat, setShowChat] = useState(false)
-    const [currentRoom, setCurrentRoom] = useState<{ room: string; character: CharacterProps } | undefined>(undefined)
+    const [showChat, setShowChat] = useState(true)
+    const [currentRoom, setCurrentRoom] = useState<{
+        room: string;
+        characters: CharacterProps[]
+    } | undefined>(undefined)
     const speed: number = 20;
     const [direction, setDirection] = useState<"right" | "left">("right")
 
@@ -73,6 +82,7 @@ export const Game: React.FC<GameProps> = ({characters, walls}) => {
         }
     };
 
+
     useEffect(() => {
         // @ts-ignore
         window.addEventListener('keydown', handleKeyDown)
@@ -83,18 +93,29 @@ export const Game: React.FC<GameProps> = ({characters, walls}) => {
     }, [character.position])
 
 
-    function handleJoinRoom({character, room}: { character: CharacterProps; room: string }) {
+    function handleJoinRoom({characters, room}: { characters: CharacterProps[]; room: string }) {
         console.log('Joining room', room);
-        setCurrentRoom({room, character})
+        setCurrentRoom({room, characters})
     }
 
     function handleLeaveRoom() {
         setCurrentRoom(undefined)
     }
 
+
     useEffect(() => {
-        console.log(currentRoom)
-    }, [currentRoom]);
+        gameSocket.on('message', (message) => {
+            setMessages(prev=>[...prev,message])
+        });
+
+        return () => {
+            gameSocket.off('message');
+        };
+    }, []);
+
+    useEffect(() => {
+        console.log(messages)
+    }, [messages]);
 
 
     if (!character.id) {
@@ -138,6 +159,8 @@ export const Game: React.FC<GameProps> = ({characters, walls}) => {
         setShowChat(prev => !prev)
     }
 
+
+
     return (
         <div
             tabIndex={0}
@@ -153,14 +176,31 @@ export const Game: React.FC<GameProps> = ({characters, walls}) => {
             {[character, ...characters].map((character, index) => {
                 const otherCharacters = characters.filter((c) => c.id !== character.id);
                 return (
-                    <Character onToggleChat={handleToggleChat} index={index} direction={direction}
+                    <Character onToggleChat={handleToggleChat} index={index}
+                               direction={direction}
                                currentRoom={currentRoom} onLeaveRoom={handleLeaveRoom}
                                onJoinRoom={handleJoinRoom}
                                key={character.id}
                                character={character} otherCharacters={otherCharacters}/>
                 )
             })}
-            {showChat && currentRoom?.room && <div className={"fixed bottom-0 h-full right-0 bg-white p-4"}/>}
+            {showChat && currentRoom?.room &&
+                <div className={"fixed border-l-2 border-black bottom-0 h-full w-1/4 right-0 bg-white p-4"}>
+                    <div className={"w-full flex flex-row justify-between items-center"}>
+                        <button onClick={handleToggleChat}
+                                className={"p-1  rounded-full duration-150 bg-black text-white"}><IoCloseSharp />
+                        </button>
+                        <span className={"font-bold whitespace-normal"}>Chat</span>
+                        <div className={"flex flex-row items-center gap-2"}>
+                            <button className={"p-2 rounded-full hover:bg-gray-200 duration-150"}><IoCall /></button>
+                            <button className={"p-2 rounded-full hover:bg-gray-200 duration-150"}><IoVideocam /></button>
+
+                        </div>
+                        </div>
+                    <div
+                        className={"font-bold text-xs pt-3 text-center w-full whitespace-normal truncate"}>{currentRoom.characters[0].name} - {currentRoom.characters[1].name}</div>
+                    <Chats roomId={currentRoom.room} messages={messages}/>
+                </div>}
         </div>
     );
 };

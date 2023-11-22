@@ -1,9 +1,8 @@
 'use client'
 import React, {useCallback, useEffect, useRef, useState} from "react";
-import Image from "next/image";
-import chat from "../../assets/chat.gif"
-import io from 'socket.io-client';
+import { PiChatTeardropDotsFill } from "react-icons/pi";
 
+import {gameSocket} from "@/components/game/newgame";
 
 export type CharacterProps = {
     id: string
@@ -20,15 +19,15 @@ export const CHARACTER_WIDTH = 80;
 type CharacterComponentProps = {
     character: CharacterProps;
     otherCharacters: CharacterProps[];
-    onJoinRoom: ({character, room}: { character: CharacterProps; room: string }) => void;
+    onJoinRoom: ({characters, room}: { characters: CharacterProps[]; room: string }) => void;
     onLeaveRoom: () => void;
-    currentRoom: { room: string; character: CharacterProps } | undefined;
+    currentRoom: { room: string; characters: CharacterProps[] } | undefined;
     direction: "right" | "left";
     index: number;
     onToggleChat: () => void;
 }
 
-const socket = io('http://localhost:3001');
+
 
 
 export const Character = ({
@@ -43,15 +42,11 @@ export const Character = ({
                           }: CharacterComponentProps) => {
 
     const [interactionStatus, setInteractionStatus] = useState(false);
-    const [messages, setMessages] = useState<string[]>([]);
     const [otherCharacter, setOtherCharacter] = useState<CharacterProps>()
     const [roomId, setRoomId] = useState("")
     const [mousePosition, setMousePosition] = useState({x: 0, y: 0});
     const eyeContainerRef = useRef(null);
 
-    useEffect(() => {
-        console.log(direction)
-    }, [direction]);
 
     useEffect(() => {
         const handleMouseMove = (e: { clientX: number; clientY: number; }) => {
@@ -98,28 +93,10 @@ export const Character = ({
         checkProximity();
     }, [checkProximity]);
 
-    useEffect(() => {
-        socket.on('connect', () => {
-            console.log('Connected to the server');
-        });
 
-        socket.on('message', (message) => {
-            setMessages((prevMessages) => [...prevMessages, message]);
-        });
 
-        return () => {
-            socket.off('connect');
-            socket.off('message');
-        };
-    }, []);
 
-    useEffect(() => {
-        console.log(JSON.stringify(messages, null, 2));
-    }, [messages]);
 
-    const sendMessage = (message: string) => {
-        socket.emit('message', {roomId, message});
-    };
     const createCommonRoomName = (name1: string, name2: string) => {
         return [name1, name2].sort().join('_');
     };
@@ -127,30 +104,29 @@ export const Character = ({
     useEffect(() => {
         if (interactionStatus) {
             const room = createCommonRoomName(character.name, otherCharacter?.name!);
-            socket.emit('joinRoom', {room});
-            onJoinRoom({character, room});
+            gameSocket.emit('joinRoom', {room});
+            onJoinRoom({characters:[character,otherCharacter!], room});
         } else {
-            socket.emit('leaveRoom', {room: createCommonRoomName(character.name, otherCharacter?.name!)});
+            gameSocket.emit('leaveRoom', {room: createCommonRoomName(character.name, otherCharacter?.name!)});
             onLeaveRoom();
         }
-        socket.on('joinedRoom', (room) => {
+        gameSocket.on('joinedRoom', (room) => {
             setRoomId(room);
         });
 
         return () => {
-            socket.off('joinedRoom');
+            gameSocket.off('joinedRoom');
         };
     }, [character.name, interactionStatus, otherCharacter?.name]);
 
     return (
         <>
-            {currentRoom?.character.id === character.id && <div style={{
+            {currentRoom?.characters[0].id === character.id && <div style={{
                 position: 'absolute',
                 left: character.position.x,
                 top: character.position.y,
-            }} onClick={onToggleChat}>
-                <Image src={chat} alt={"chatting..."} className={"-mt-[35px] ml-[70px] "} height={24}
-                       width={24}/>
+            }} onClick={onToggleChat} className={"cursor-pointer"}>
+                <PiChatTeardropDotsFill  className={"-mt-[35px] ml-[70px] h-[40px] w-[40px]"}/>
             </div>}
             <div
                 style={{
@@ -163,7 +139,7 @@ export const Character = ({
                     width: CHARACTER_WIDTH,
                     height: CHARACTER_HEIGHT,
                     backgroundColor: character.color,
-                }} onClick={() => sendMessage('Hello from ' + character.name)}
+                }}
                      className={`relative group  p-2 rounded-b rounded-t-2xl ${(index === 0 && direction === "left" ? "rounded-tl-3xl" : "rounded-tr-3xl")}   border-2 border-black`}>
                     <div
                         className={"text-[9px] hidden group-hover:block duration-150 truncate font-bold"}> {character.name}</div>

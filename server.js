@@ -20,7 +20,7 @@ io.on('connection', (socket) => {
     io.to(room).emit('message', message);
   });
 
-  socket.on('joinRoom', ({ characters, room }) => {
+  socket.on('joinRoom', ({ room }) => {
     console.log(`User joined room ${room}`)
     socket.join(room);
     socket.to(room).emit('joinedRoom', room);

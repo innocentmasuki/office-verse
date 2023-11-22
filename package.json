@@ -3,18 +3,16 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "nodemon server.js && next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
     "nodemon": "nodemon server.js"
   },
   "dependencies": {
-    "@pixi/react": "^7.1.1",
     "http": "^0.0.1-security",
     "next": "14.0.3",
     "nodemon": "^3.0.1",
-    "pixi.js": "^7.3.2",
     "react": "^18",
     "react-dom": "^18",
     "socket.io": "^4.7.2",

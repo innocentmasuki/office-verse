@@ -22,7 +22,7 @@ export const Game: React.FC<GameProps> = ({characters, walls}) => {
         gender: "male"
     })
     const [currentRoom, setCurrentRoom] = useState<{ room: string; character: CharacterProps } | undefined>(undefined)
-    const speed: number = 10;
+    const speed: number = 20;
     const [direction, setDirection] = useState<"right" | "left">("right")
 
     useEffect(() => {
@@ -103,17 +103,25 @@ export const Game: React.FC<GameProps> = ({characters, walls}) => {
                     <h1 className={"text-2xl font-bold"}>Office-verse</h1>
                     <input className={"px-4 py-2"} value={character.name} type={"text"} placeholder={"Name"}
                            onChange={(e) => setCharacter({...character, name: e.target.value})}/>
-                    <div className={"flex flex-row"}>
-                        <input type={"radio"} checked={character.gender === "male"} name={"gender"} value={"male"}
-                               onChange={(e) => setCharacter({
-                                   ...character,
-                                   gender: e.target.value as "male" | "female"
-                               })}/>
-                        <input type={"radio"} checked={character.gender === "female"} name={"gender"} value={"female"}
-                               onChange={(e) => setCharacter({
-                                   ...character,
-                                   gender: e.target.value as "male" | "female"
-                               })}/>
+                    <div className={"flex flex-col justify-center w-full"}>
+                        <div className={"self-center flex flex-row gap-4"}><label htmlFor={"male"}>Male</label>
+                            <input type={"radio"} id={"male"} checked={character.gender === "male"} name={"gender"}
+                                   value={"male"}
+                                   onChange={(e) => setCharacter({
+                                       ...character,
+                                       gender: e.target.value as "male" | "female"
+                                   })}/></div>
+
+                        <div  className={"self-center flex flex-row gap-4"}>
+                            <label htmlFor={"female"}>Female</label>
+                            <input type={"radio"} checked={character.gender === "female"} name={"gender"}
+                                   value={"female"}
+                                   onChange={(e) => setCharacter({
+                                       ...character,
+                                       gender: e.target.value as "male" | "female"
+                                   })}/>
+                        </div>
+
                     </div>
                     <input value={character.color} className={"w-full h-10"} type={"color"}
                            onChange={(e) => setCharacter({...character, color: e.target.value})}/>
@@ -137,10 +145,11 @@ export const Game: React.FC<GameProps> = ({characters, walls}) => {
             {walls.map((wall, index) => (
                 <Wall wall={wall} key={index}/>
             ))}
-            {[character, ...characters].map((character) => {
+            {[character, ...characters].map((character, index) => {
                 const otherCharacters = characters.filter((c) => c.id !== character.id);
                 return (
-                    <Character direction={direction} currentRoom={currentRoom} onLeaveRoom={handleLeaveRoom} onJoinRoom={handleJoinRoom}
+                    <Character index={index} direction={direction} currentRoom={currentRoom} onLeaveRoom={handleLeaveRoom}
+                               onJoinRoom={handleJoinRoom}
                                key={character.id}
                                character={character} otherCharacters={otherCharacters}/>
                 )

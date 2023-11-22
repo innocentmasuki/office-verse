@@ -43,7 +43,6 @@ export const Character = ({
 
     const [interactionStatus, setInteractionStatus] = useState(false);
     const [otherCharacter, setOtherCharacter] = useState<CharacterProps>()
-    const [roomId, setRoomId] = useState("")
     const [mousePosition, setMousePosition] = useState({x: 0, y: 0});
     const eyeContainerRef = useRef(null);
 
@@ -73,6 +72,7 @@ export const Character = ({
 
 
     const checkProximity = useCallback(() => {
+        const chars = otherCharacters.filter(char=>char.id !== character.id)
         for (const otherCharacter of otherCharacters!) {
             const distance = Math.sqrt(
                 Math.pow(character.position.x - otherCharacter.position.x, 2) +
@@ -110,9 +110,7 @@ export const Character = ({
             gameSocket.emit('leaveRoom', {room: createCommonRoomName(character.name, otherCharacter?.name!)});
             onLeaveRoom();
         }
-        gameSocket.on('joinedRoom', (room) => {
-            setRoomId(room);
-        });
+       
 
         return () => {
             gameSocket.off('joinedRoom');

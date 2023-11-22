@@ -20,7 +20,6 @@ function getUniqueCharacters(characters) {
   }
   
   const uniqueCharacters = Array.from(latestCharacters.values());
-  console.log(JSON.stringify(uniqueCharacters, null, 2))
   return uniqueCharacters;
   }
 
@@ -42,10 +41,10 @@ io.on('connection', (socket) => {
   socket.on('newUser', (user) => {
     characters.push(user)
     io.emit('characters',getUniqueCharacters(characters))
-    console.log(JSON.stringify(getUniqueCharacters(characters),null,2))
   });
 
   socket.on('leaveRoom', (room) => {
+    console.log("Room left")
     socket.leave(room);
   });
 

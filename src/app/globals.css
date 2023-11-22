@@ -53,3 +53,7 @@ body{
 .look-left{
   transform: scaleX(-1);
 }
+
+*{
+  outline: none;
+}

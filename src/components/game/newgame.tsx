@@ -21,6 +21,7 @@ export const Game: React.FC<GameProps> = ({characters, walls}) => {
         color: "#14b8bd",
         gender: "male"
     })
+    const [showChat, setShowChat] = useState(false)
     const [currentRoom, setCurrentRoom] = useState<{ room: string; character: CharacterProps } | undefined>(undefined)
     const speed: number = 20;
     const [direction, setDirection] = useState<"right" | "left">("right")
@@ -112,7 +113,7 @@ export const Game: React.FC<GameProps> = ({characters, walls}) => {
                                        gender: e.target.value as "male" | "female"
                                    })}/></div>
 
-                        <div  className={"self-center flex flex-row gap-4"}>
+                        <div className={"self-center flex flex-row gap-4"}>
                             <label htmlFor={"female"}>Female</label>
                             <input type={"radio"} checked={character.gender === "female"} name={"gender"}
                                    value={"female"}
@@ -133,6 +134,10 @@ export const Game: React.FC<GameProps> = ({characters, walls}) => {
             </div>)
     }
 
+    function handleToggleChat() {
+        setShowChat(prev => !prev)
+    }
+
     return (
         <div
             tabIndex={0}
@@ -148,12 +153,14 @@ export const Game: React.FC<GameProps> = ({characters, walls}) => {
             {[character, ...characters].map((character, index) => {
                 const otherCharacters = characters.filter((c) => c.id !== character.id);
                 return (
-                    <Character index={index} direction={direction} currentRoom={currentRoom} onLeaveRoom={handleLeaveRoom}
+                    <Character onToggleChat={handleToggleChat} index={index} direction={direction}
+                               currentRoom={currentRoom} onLeaveRoom={handleLeaveRoom}
                                onJoinRoom={handleJoinRoom}
                                key={character.id}
                                character={character} otherCharacters={otherCharacters}/>
                 )
             })}
+            {showChat && currentRoom?.room && <div className={"fixed bottom-0 h-full right-0 bg-white p-4"}/>}
         </div>
     );
 };

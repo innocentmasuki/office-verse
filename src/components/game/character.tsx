@@ -25,6 +25,7 @@ type CharacterComponentProps = {
     currentRoom: { room: string; character: CharacterProps } | undefined;
     direction: "right" | "left";
     index: number;
+    onToggleChat: () => void;
 }
 
 const socket = io('http://localhost:3001');
@@ -37,6 +38,7 @@ export const Character = ({
                               onJoinRoom,
                               currentRoom,
                               onLeaveRoom,
+    onToggleChat,
                               otherCharacters
                           }: CharacterComponentProps) => {
 
@@ -146,7 +148,7 @@ export const Character = ({
                 position: 'absolute',
                 left: character.position.x,
                 top: character.position.y,
-            }}>
+            }} onClick={onToggleChat}>
                 <Image src={chat} alt={"chatting..."} className={"-mt-[35px] ml-[70px] "} height={24}
                        width={24}/>
             </div>}

@@ -2,56 +2,56 @@ import {CharacterProps} from "@/components/game/character";
 import {WallProps} from "@/components/game/wall";
 
 export const characters: CharacterProps[] = [
-    {
-        id: "1",
-        position: {x: 700, y: 200},
-        color: "#09c076",
-        name: "Innocent Masuki",
-        gender: "male"
-    },
-    {
-        id: "2",
-        color: "#09c076",
-        position: {x: 100, y: 30},
-        name: "Ruben Mostert",
-        gender: "male"
-    },
-    {
-        id: "3",
-        position: {x: 300, y: 300},
-        name: "Fortune Tiriboyi",
-        color: "#09c076", gender: "male"
-    },
-    {
-        id: "4",
-        position: {x: 500, y: 400},
-        name: "Simon Moyo",
-        color: "#09c076", gender: "male"
+    // {
+    //     id: "1",
+    //     position: {x: 700, y: 200},
+    //     color: "#09c076",
+    //     name: "Innocent Masuki",
+    //     gender: "male"
+    // },
+    // {
+    //     id: "2",
+    //     color: "#09c076",
+    //     position: {x: 100, y: 30},
+    //     name: "Ruben Mostert",
+    //     gender: "male"
+    // },
+    // {
+    //     id: "3",
+    //     position: {x: 300, y: 300},
+    //     name: "Fortune Tiriboyi",
+    //     color: "#09c076", gender: "male"
+    // },
+    // {
+    //     id: "4",
+    //     position: {x: 500, y: 400},
+    //     name: "Simon Moyo",
+    //     color: "#09c076", gender: "male"
 
 
-    },
-    {
-        id: "5",
-        position: {x: 1000, y: 300},
-        name: "Tafadzwa",
-        color: "#09c076", gender: "male"
+    // },
+    // {
+    //     id: "5",
+    //     position: {x: 1000, y: 300},
+    //     name: "Tafadzwa",
+    //     color: "#09c076", gender: "male"
 
 
-    },
-    {
-        id: "6",
-        position: {x: 90, y: 710},
-        color: "#09c076",
-        name: "Javier Goodall",
-        gender: "male"
-    },
-    {
-        id: "7",
-        position: {x: 900, y: 30},
-        color: "#09c076",
-        name: "Sakhile Mpugose",
-        gender: "male"
-    },
+    // },
+    // {
+    //     id: "6",
+    //     position: {x: 90, y: 710},
+    //     color: "#09c076",
+    //     name: "Javier Goodall",
+    //     gender: "male"
+    // },
+    // {
+    //     id: "7",
+    //     position: {x: 900, y: 30},
+    //     color: "#09c076",
+    //     name: "Sakhile Mpugose",
+    //     gender: "male"
+    // },
 
 ]
 

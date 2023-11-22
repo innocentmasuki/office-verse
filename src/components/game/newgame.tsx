@@ -13,26 +13,33 @@ type GameProps = {
     walls: WallProps[];
 };
 
-export const gameSocket = io('http://localhost:3001');
+export const gameSocket = io('http://10.0.254.232:3001');
 
-export const Game: React.FC<GameProps> = ({characters, walls}) => {
-    const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-    const [windowHeight, setWindowHeight] = useState(window.innerHeight);
+export const Game: React.FC<GameProps> = ({ walls}) => {
+
+    const speed: number = 20;
+    const [windowWidth, setWindowWidth] = useState(0);
+    const [windowHeight, setWindowHeight] = useState(0);
     const [messages, setMessages] = useState<string[]>([]);
     const [character, setCharacter] = useState<CharacterProps>({
         id: "",
         name: "",
         position: {x: 500, y: 400},
         color: "#14b8bd",
-        gender: "male"
+        gender: "male",
     })
+    const [characters, setCharacters] = useState<CharacterProps[]>([])
+
     const [showChat, setShowChat] = useState(false)
+    const [gameLoading, setGameLoading] = useState(true)
+    
     const [currentRoom, setCurrentRoom] = useState<{
         room: string;
         characters: CharacterProps[]
     } | undefined>(undefined)
-    const speed: number = 5;
+    
     const [direction, setDirection] = useState<"right" | "left">("right")
+
 
     useEffect(() => {
         const handleResize = () => {
@@ -42,6 +49,22 @@ export const Game: React.FC<GameProps> = ({characters, walls}) => {
         window.addEventListener('resize', handleResize);
         return () => window.removeEventListener('resize', handleResize);
     }, []);
+
+    useEffect(() => {
+        const char = localStorage.getItem("character")
+        if(char){
+            setCharacter(JSON.parse(char))
+        }
+        setGameLoading(false)
+    }, []);
+
+    useEffect(() => {
+        if(character.id){
+            gameSocket.emit('newUser',character)
+        }
+    }, [character]);
+
+    
 
     const isColliding = (newPosition: { x: number; y: number }) => {
         for (let wall of walls) {
@@ -101,20 +124,39 @@ export const Game: React.FC<GameProps> = ({characters, walls}) => {
         setCurrentRoom(undefined)
     }
 
-
+    
     useEffect(() => {
+        gameSocket.on('connect', () => {
+            console.log("User connected")
+        });
         gameSocket.on('message', (message) => {
             setMessages(prev=>[...prev,message])
         });
 
+        gameSocket.on('characters', (message) => {
+            setCharacters(message)
+        });
+
         return () => {
             gameSocket.off('message');
+            gameSocket.off('connect');
+            gameSocket.off('characters');
         };
     }, []);
+
+
+    useEffect(() => {
+        // console.clear()
+        console.log(characters)
+    }, [characters]);
 
     useEffect(() => {
         console.log(messages)
     }, [messages]);
+
+    if(gameLoading){
+        return <div className={"h-screen w-screen flex flex-col justify-center items-center"}> <div>Loading...</div></div>
+    }
 
 
     if (!character.id) {
@@ -148,7 +190,11 @@ export const Game: React.FC<GameProps> = ({characters, walls}) => {
                            onChange={(e) => setCharacter({...character, color: e.target.value})}/>
                     <button disabled={!character.name}
                             className={"bg-black disabled:bg-gray-400 disabled:cursor-not-allowed px-4 py-2 text-white"}
-                            onClick={() => setCharacter({...character, id: uuidv4()})}>Submit
+                            onClick={() => {
+                                const newChar = {...character, id: uuidv4()}
+                                setCharacter(newChar)
+                                localStorage.setItem("character",JSON.stringify(newChar))
+                                }}>Submit
                     </button>
                 </div>
             </div>)
@@ -172,15 +218,14 @@ export const Game: React.FC<GameProps> = ({characters, walls}) => {
             {walls.map((wall, index) => (
                 <Wall wall={wall} key={index}/>
             ))}
-            {[character, ...characters].map((character, index) => {
-                const otherCharacters = characters.filter((c) => c.id !== character.id);
+            {characters.map((character, index) => {
                 return (
                     <Character onToggleChat={handleToggleChat} index={index}
                                direction={direction}
                                currentRoom={currentRoom} onLeaveRoom={handleLeaveRoom}
                                onJoinRoom={handleJoinRoom}
                                key={character.id}
-                               character={character} otherCharacters={otherCharacters}/>
+                               character={character} otherCharacters={characters}/>
                 )
             })}
             {showChat && currentRoom?.room &&

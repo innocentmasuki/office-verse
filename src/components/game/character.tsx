@@ -73,7 +73,7 @@ export const Character = ({
 
     const checkProximity = useCallback(() => {
         const chars = otherCharacters.filter(char=>char.id !== character.id)
-        for (const otherCharacter of otherCharacters!) {
+        for (const otherCharacter of chars!) {
             const distance = Math.sqrt(
                 Math.pow(character.position.x - otherCharacter.position.x, 2) +
                 Math.pow(character.position.y - otherCharacter.position.y, 2)

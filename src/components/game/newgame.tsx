@@ -15,19 +15,18 @@ type GameProps = {
 
 export const gameSocket = io('http://localhost:3001');
 
-
 export const Game: React.FC<GameProps> = ({characters, walls}) => {
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
     const [windowHeight, setWindowHeight] = useState(window.innerHeight);
     const [messages, setMessages] = useState<string[]>([]);
     const [character, setCharacter] = useState<CharacterProps>({
-        id: "kkhds",
-        name: "Idino",
+        id: "",
+        name: "",
         position: {x: 500, y: 400},
         color: "#14b8bd",
         gender: "male"
     })
-    const [showChat, setShowChat] = useState(true)
+    const [showChat, setShowChat] = useState(false)
     const [currentRoom, setCurrentRoom] = useState<{
         room: string;
         characters: CharacterProps[]

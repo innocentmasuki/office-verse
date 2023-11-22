@@ -9,7 +9,7 @@ export const characters: CharacterProps[] = [
     },
     {
         id: "2",
-        position: {x: 700, y: 200},
+        position: {x: 100, y: 30},
         name: "Sakhile Mpugose",
 
     },
@@ -33,7 +33,7 @@ export const characters: CharacterProps[] = [
     },
     {
         id: "6",
-        position: {x: 900, y: 100},
+        position: {x: 90, y: 710},
         name: "Javier Goodall",
 
     },
@@ -50,13 +50,21 @@ export const walls: WallProps[] = [
     // Left border
     { x: 10, y: 10, width: 10, height: 800, color: 'gray'},
 
-    // Right border
-    { x: (600*2), y: 10, width: 10, height: 800, color: 'gray'},
+    // Right-top border
+    { x: (600*2), y: 10, width: 10, height: 450, color: 'gray'},
 
-    // Internal walls (adjust these as needed to create the maze pathways)
-    { x: 60, y: 60, width: 10, height: 400, color: 'gray'},
-    { x: 110, y: 10, width: 10, height: 350, color: 'gray'},
-    { x: 150, y: 160, width: 10, height: 350, color: 'gray'},
-    { x: 200, y: 10, width: 10, height: 300, color: 'gray'},
-    // Add more walls as needed to complete the maze
+    // Right-bottom  border
+    { x: (600*2) , y: 600, width: 10, height: 200, color: 'gray'}, 
+
+
+
+    // Innocents Desk Bottom right
+    { x: 940, y: 630, width: 130*2, height: 80, color: 'white'},
+
+    // Javier's Desk Bottom Left
+    { x: 20, y: 630, width: 130*2, height: 80, color: 'white'},
+
+    // Sakhile's Desk Top Left
+    { x: 20, y: 100, width: 130*2, height: 80, color: 'white'},
+
 ];

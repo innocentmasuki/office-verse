@@ -78,7 +78,7 @@ export const Game: React.FC<GameProps> = ({characters, walls}) => {
                 position: 'relative',
                 width: windowWidth,
                 height: windowHeight,
-                backgroundColor: '#ffffff'
+                backgroundColor: '#EFDECD'
             }}
         >
             {walls.map((wall, index) => (

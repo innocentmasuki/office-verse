@@ -31,7 +31,7 @@ export const Game: React.FC<GameProps> = ({characters, walls}) => {
         room: string;
         characters: CharacterProps[]
     } | undefined>(undefined)
-    const speed: number = 20;
+    const speed: number = 5;
     const [direction, setDirection] = useState<"right" | "left">("right")
 
     useEffect(() => {

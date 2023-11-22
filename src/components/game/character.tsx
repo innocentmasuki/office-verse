@@ -142,7 +142,7 @@ export const Character = ({
                 }}
                      className={`relative group  p-2 rounded-b rounded-t-2xl ${(index === 0 && direction === "left" ? "rounded-tl-3xl" : "rounded-tr-3xl")}   border-2 border-black`}>
                     <div
-                        className={"text-[9px] hidden group-hover:block duration-150 truncate font-bold"}> {character.id}</div>
+                        className={"text-[9px] hidden group-hover:block duration-150 truncate font-bold"}> {character.name}</div>
 
                     <div
                         className={`eye-container  absolute ${(index === 0 && direction === "left" ? "-left-5" : "left-0")} `}

@@ -24,10 +24,10 @@ function getUniqueCharacters(characters) {
   return uniqueCharacters;
   }
 
-
+  var characters = []
 io.on('connection', (socket) => {
   console.log('A user connected');
-  var characters = []
+ 
 
   socket.on('sendMessage', ({ room, message }) => {
     io.to(room).emit('message', message);
@@ -41,14 +41,25 @@ io.on('connection', (socket) => {
 
   socket.on('newUser', (user) => {
     characters.push(user)
-    socket.emit('characters',getUniqueCharacters(characters))
-    console.log("=>",JSON.stringify(getUniqueCharacters(characters),null,2))
+    io.emit('characters',getUniqueCharacters(characters))
+    console.log(JSON.stringify(getUniqueCharacters(characters),null,2))
   });
 
   socket.on('leaveRoom', (room) => {
     socket.leave(room);
   });
+
+  // socket.on('disconnect', () => {
+  //   const disconnectedUser = usersBySocketId.get(socket.id);
+  //   if (disconnectedUser) {
+  //   characters = characters.filter(c => c.id !== disconnectedUser.id);
+  //   io.emit('characters', getUniqueCharacters(characters));
+  //     usersBySocketId.delete(socket.id);
+  //   }
+  //   });
+  
 });
+
 
 const PORT = 3001;
 httpServer.listen(PORT, () => {

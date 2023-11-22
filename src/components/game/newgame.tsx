@@ -158,6 +158,17 @@ export const Game: React.FC<GameProps> = ({ walls}) => {
         return <div className={"h-screen w-screen flex flex-col justify-center items-center"}> <div>Loading...</div></div>
     }
 
+    function moveToFirst(array:CharacterProps[], id:string) {
+        const index = array.findIndex(item => item.id === id); // id is a string
+        
+        if (index !== -1) {
+            const [item] = array.splice(index, 1); // Remove the item from the array
+            array.unshift(item); // Add the item to the beginning of the array
+        }
+        
+        return array;
+        }
+
 
     if (!character.id) {
         return (
@@ -218,7 +229,7 @@ export const Game: React.FC<GameProps> = ({ walls}) => {
             {walls.map((wall, index) => (
                 <Wall wall={wall} key={index}/>
             ))}
-            {characters.map((character, index) => {
+            {moveToFirst(characters,character.id).map((character, index) => {
                 return (
                     <Character onToggleChat={handleToggleChat} index={index}
                                direction={direction}

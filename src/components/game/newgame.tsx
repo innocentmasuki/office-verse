@@ -12,7 +12,7 @@ type GameProps = {
     walls: WallProps[];
 };
 
-export const gameSocket = io('http://officeverse.com/socket');
+export const gameSocket = io('http://officeverse.com/socket/');
 
 export const Game: React.FC<GameProps> = ({ walls}) => {
 

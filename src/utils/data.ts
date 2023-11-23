@@ -74,6 +74,6 @@ export const walls: WallProps[] = [
 
 
     // Swimming Pool
-    {x: (500 * 2), y: (700 * 2), width: (600 * 2), height: 400, color: 'aqua', passable: true},
+    {x: (500 * 2), y: (700 * 2), width: (600 * 2), height: 400, color: 'aqua', passable: true, name: 'swimming-pool'},
 
 ];

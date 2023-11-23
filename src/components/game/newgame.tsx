@@ -68,6 +68,9 @@ export const Game: React.FC<GameProps> = ({ walls}) => {
 
     const isColliding = (newPosition: { x: number; y: number }) => {
         for (let wall of walls) {
+            if(wall.passable === true){
+                continue
+            }
             if (newPosition.x < wall.x + wall.width &&
                 newPosition.x + CHARACTER_WIDTH > wall.x &&
                 newPosition.y < wall.y + wall.height &&

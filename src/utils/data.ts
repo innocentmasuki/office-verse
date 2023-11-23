@@ -20,7 +20,7 @@ export const walls: WallProps[] = [
     // Right-bottom  border
     {x: (600 * 2), y: 600, width: 10, height: 200, color: 'gray'},
 
-    
+
     // Outside top border
     {x: (600 * 2), y: 340, width: 400 * 2, height: 10, color: 'gray'},
 
@@ -36,18 +36,18 @@ export const walls: WallProps[] = [
     // Top office border
     {x: (1100 * 2), y: 340, width: 350 * 2, height: 10, color: 'gray'},
 
-    // Bottom border 
+    // Bottom border
     {x: (1000 * 2), y: 800, width: 450 * 2, height: 10, color: 'gray'},
 
     // Right border
     {x: (1450 * 2), y: 340, width: 10, height: 470, color: 'gray'},
 
-    
-    // Kitchen border 
+
+    // Kitchen border
     {x: (1100 * 2), y: -300, width: 10, height: 650, color: 'gray'},
 
     {x: (1450 * 2), y: -300, width: 10, height: 650, color: 'gray'},
-    
+
 
     // Desks
 
@@ -74,6 +74,6 @@ export const walls: WallProps[] = [
 
 
     // Swimming Pool
-    {x: (500 * 2), y: (700 * 2), width: (600 * 2), height: 400, color: 'aqua'},
+    {x: (500 * 2), y: (700 * 2), width: (600 * 2), height: 400, color: 'aqua', passable: true},
 
 ];

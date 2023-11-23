@@ -2,7 +2,7 @@ import React from "react";
 
 
 export type WallProps = {
-    x: number, y: number, width: number, height: number, color?: string
+    x: number, y: number, width: number, height: number, color?: string,passable?:boolean
 }
 export const Wall = ({wall}: { wall:WallProps }) => {
     const {x, y, width, height, color="red"} = wall;

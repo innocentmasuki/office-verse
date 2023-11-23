@@ -68,7 +68,7 @@ export const walls: WallProps[] = [
 
 
     // Desks in office 02
-    
+
     {x: (1300 * 2), y: 630, width: 140, height: 170, color: 'white'},
 
     {x: (1120 * 2), y: 630, width: 140, height: 170, color: 'white'},
@@ -76,7 +76,7 @@ export const walls: WallProps[] = [
     {x: (1120 * 2), y: 350, width: 140, height: 170, color: 'white'},
 
     {x: (1300 * 2), y: 350, width: 140, height: 170, color: 'white'},
-    
+
 
     // Outside Desk inbetween office 01 and 02
     {x: (700 * 2), y: 450, width: 260, height: 400, color: 'white'},
@@ -87,6 +87,8 @@ export const walls: WallProps[] = [
 
     // Swimming Pool
     {x: (500 * 2), y: (700 * 2), width: (600 * 2), height: 400, color: 'aqua', passable: true, name: 'swimming-pool'},
+
+    {x: (0), y: (700 * 4), width: 400, height: 560, color: 'aqua', passable: true, name: 'chess-board', children: <iframe style={{width: "100%", height:"100%"}} src="https://www.chess.com/daily_puzzle" frameborder="0"></iframe>},
 
 ];
 

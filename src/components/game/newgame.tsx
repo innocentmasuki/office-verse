@@ -52,9 +52,6 @@ export const Game: React.FC<GameProps> = ({ walls}) => {
         }
     }, [music]);
 
-    useEffect(() => {
-       console.log(music)
-    }, [music]);
 
 
 

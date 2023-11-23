@@ -12,7 +12,7 @@ type GameProps = {
     walls: WallProps[];
 };
 
-export const gameSocket = io('http://officeverse.com', { path: '/socket.io/' });
+export const gameSocket = io(process.env.NODE_ENV === "development" ? "http://localhost:3000" : "http://officeverse.com", { path: '/socket.io/' });
 
 export const Game: React.FC<GameProps> = ({ walls}) => {
 

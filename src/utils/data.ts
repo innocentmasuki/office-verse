@@ -15,7 +15,7 @@ export const walls: WallProps[] = [
     {x: 10, y: 10, width: 10, height: 800, color: 'gray'},
 
     // Right-top border
-    {x: (600 * 2), y: 10, width: 10, height: 450, color: 'gray'},
+    {x: (600 * 2), y: -640, width: 10, height: 650, color: 'gray'},
 
     // Right-bottom  border
     {x: (600 * 2), y: 600, width: 10, height: 200, color: 'gray'},
@@ -49,7 +49,7 @@ export const walls: WallProps[] = [
     {x: (1450 * 2), y: -300, width: 10, height: 650, color: 'gray'},
 
 
-    // Desks
+     // Desks in office 01
 
     // Innocents Desk Bottom right
     {x: 940, y: 630, width: 130 * 2, height: 80, color: 'white'},
@@ -66,6 +66,18 @@ export const walls: WallProps[] = [
     // Gift's Desk
     {x: 750, y: 20, width: 220, height: 320, color: 'white'},
 
+
+    // Desks in office 02
+    
+    {x: (1300 * 2), y: 630, width: 140, height: 170, color: 'white'},
+
+    {x: (1120 * 2), y: 630, width: 140, height: 170, color: 'white'},
+
+    {x: (1120 * 2), y: 350, width: 140, height: 170, color: 'white'},
+
+    {x: (1300 * 2), y: 350, width: 140, height: 170, color: 'white'},
+    
+
     // Outside Desk inbetween office 01 and 02
     {x: (700 * 2), y: 450, width: 260, height: 400, color: 'white'},
 
@@ -77,3 +89,6 @@ export const walls: WallProps[] = [
     {x: (500 * 2), y: (700 * 2), width: (600 * 2), height: 400, color: 'aqua', passable: true, name: 'swimming-pool'},
 
 ];
+
+
+

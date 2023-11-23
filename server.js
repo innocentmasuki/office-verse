@@ -5,7 +5,7 @@ const httpServer = http.createServer();
 
 const io = new Server(httpServer, {
   cors: {
-    origin: "http://10.0.254.232:3000",
+    origin: "http://localhost:3000",
     methods: ["GET", "POST"],
     allowedHeaders: ["my-custom-header"],
     credentials: true,
@@ -14,11 +14,11 @@ const io = new Server(httpServer, {
 
 function getUniqueCharacters(characters) {
   const latestCharacters = new Map();
-  
+
   for (const character of characters) {
       latestCharacters.set(character.id, character);
   }
-  
+
   const uniqueCharacters = Array.from(latestCharacters.values());
   return uniqueCharacters;
   }
@@ -26,7 +26,7 @@ function getUniqueCharacters(characters) {
   var characters = []
 io.on('connection', (socket) => {
   console.log('A user connected');
- 
+
 
   socket.on('sendMessage', ({ room, message }) => {
     console.log(room)
@@ -57,7 +57,7 @@ io.on('connection', (socket) => {
   //     usersBySocketId.delete(socket.id);
   //   }
   //   });
-  
+
 });
 
 

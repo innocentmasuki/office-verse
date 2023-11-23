@@ -12,7 +12,7 @@ type GameProps = {
     walls: WallProps[];
 };
 
-export const gameSocket = io('http://10.0.254.232:3001');
+export const gameSocket = io('http://localhost:3001');
 
 export const Game: React.FC<GameProps> = ({ walls}) => {
 

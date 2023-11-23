@@ -9,7 +9,6 @@ import {IoCall, IoCloseSharp, IoVideocam} from "react-icons/io5";
 import io from "socket.io-client";
 
 type GameProps = {
-    characters: CharacterProps[];
     walls: WallProps[];
 };
 
@@ -33,12 +32,12 @@ export const Game: React.FC<GameProps> = ({ walls}) => {
 
     const [showChat, setShowChat] = useState(false)
     const [gameLoading, setGameLoading] = useState(true)
-    
+
     const [currentRoom, setCurrentRoom] = useState<{
         room: string;
         characters: CharacterProps[]
     } | undefined>(undefined)
-    
+
     const [direction, setDirection] = useState<"right" | "left">("right")
 
 
@@ -65,7 +64,7 @@ export const Game: React.FC<GameProps> = ({ walls}) => {
         }
     }, [character]);
 
-    
+
 
     const isColliding = (newPosition: { x: number; y: number }) => {
         for (let wall of walls) {
@@ -125,14 +124,14 @@ export const Game: React.FC<GameProps> = ({ walls}) => {
         setCurrentRoom(undefined)
     }
 
-   
 
-    
+
+
     useEffect(() => {
         gameSocket.on('connect', () => {
             console.log("User connected")
         });
-        
+
         gameSocket.on('characters', (message) => {
             setCharacters(message)
         });
@@ -154,7 +153,7 @@ export const Game: React.FC<GameProps> = ({ walls}) => {
         console.log(characters)
     }, [characters]);
 
-   
+
 
     if(gameLoading){
         return <div className={"h-screen w-screen flex flex-col justify-center items-center"}> <div>Loading...</div></div>
@@ -162,12 +161,12 @@ export const Game: React.FC<GameProps> = ({ walls}) => {
 
     function moveToFirst(array:CharacterProps[], id:string) {
         const index = array.findIndex(item => item.id === id); // id is a string
-        
+
         if (index !== -1) {
             const [item] = array.splice(index, 1); // Remove the item from the array
             array.unshift(item); // Add the item to the beginning of the array
         }
-        
+
         return array;
         }
 
@@ -257,13 +256,13 @@ export const Game: React.FC<GameProps> = ({ walls}) => {
                         </div>
                     <div
                         className={"font-bold text-xs pt-3 text-center w-full whitespace-normal truncate"}>{currentRoom?.characters[0].name} - {currentRoom?.characters[1].name}</div>
-                    
-                   
+
+
                     <Chats user={character} messages={messages} roomId={currentRoom?.room!}/>
                     </div>
-                    
-                    
-                    
+
+
+
                 </div>}
         </div>
     );

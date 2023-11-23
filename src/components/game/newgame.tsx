@@ -20,7 +20,8 @@ export const Game: React.FC<GameProps> = ({ walls}) => {
     const speed: number = 20;
     const [windowWidth, setWindowWidth] = useState(0);
     const [windowHeight, setWindowHeight] = useState(0);
-    const [messages, setMessages] = useState<string[]>([]);
+    const [messages, setMessages] = useState<{message:string;sender:CharacterProps}[]>([]);
+
     const [character, setCharacter] = useState<CharacterProps>({
         id: "",
         name: "",
@@ -124,23 +125,26 @@ export const Game: React.FC<GameProps> = ({ walls}) => {
         setCurrentRoom(undefined)
     }
 
+   
+
     
     useEffect(() => {
         gameSocket.on('connect', () => {
             console.log("User connected")
         });
-        gameSocket.on('message', (message) => {
-            setMessages(prev=>[...prev,message])
-        });
-
+        
         gameSocket.on('characters', (message) => {
             setCharacters(message)
         });
+        gameSocket.on('receiveMessage', (message) => {
+            console.log(message)
+            setMessages(prev=>[...prev,message])
+        });
 
         return () => {
-            gameSocket.off('message');
             gameSocket.off('connect');
             gameSocket.off('characters');
+            gameSocket.off('receiveMessage');
         };
     }, []);
 
@@ -150,9 +154,7 @@ export const Game: React.FC<GameProps> = ({ walls}) => {
         console.log(characters)
     }, [characters]);
 
-    useEffect(() => {
-        console.log(messages)
-    }, [messages]);
+   
 
     if(gameLoading){
         return <div className={"h-screen w-screen flex flex-col justify-center items-center"}> <div>Loading...</div></div>
@@ -239,8 +241,9 @@ export const Game: React.FC<GameProps> = ({ walls}) => {
                                character={character} otherCharacters={characters}/>
                 )
             })}
-            {showChat && currentRoom?.room &&
+            {showChat  &&
                 <div className={"fixed border-l-2 border-black bottom-0 h-full w-1/4 right-0 bg-white p-4"}>
+                    <div className='flex flex-col justify-start h-full'>
                     <div className={"w-full flex flex-row justify-between items-center"}>
                         <button onClick={handleToggleChat}
                                 className={"p-1  rounded-full duration-150 bg-black text-white"}><IoCloseSharp />
@@ -253,8 +256,14 @@ export const Game: React.FC<GameProps> = ({ walls}) => {
                         </div>
                         </div>
                     <div
-                        className={"font-bold text-xs pt-3 text-center w-full whitespace-normal truncate"}>{currentRoom.characters[0].name} - {currentRoom.characters[1].name}</div>
-                    <Chats roomId={currentRoom.room} messages={messages}/>
+                        className={"font-bold text-xs pt-3 text-center w-full whitespace-normal truncate"}>{currentRoom?.characters[0].name} - {currentRoom?.characters[1].name}</div>
+                    
+                   
+                    <Chats user={character} messages={messages} roomId={currentRoom?.room!}/>
+                    </div>
+                    
+                    
+                    
                 </div>}
         </div>
     );

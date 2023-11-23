@@ -111,15 +111,11 @@ export const Character = ({
             onLeaveRoom();
         }
        
-
-        return () => {
-            gameSocket.off('joinedRoom');
-        };
     }, [character.name, interactionStatus, otherCharacter?.name]);
 
     return (
         <>
-            {currentRoom?.characters[0].id === character.id && <div style={{
+            {currentRoom?.characters[0].id === character.id && currentRoom.characters.some(char=> char.id === character.id) && <div style={{
                 position: 'absolute',
                 left: character.position.x,
                 top: character.position.y,

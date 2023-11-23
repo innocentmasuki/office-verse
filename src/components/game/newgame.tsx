@@ -40,7 +40,7 @@ export const Game: React.FC<GameProps> = ({ walls}) => {
 
     const [direction, setDirection] = useState<"right" | "left">("right")
 
-    const audioRef = useRef(null);
+    const audioRef = useRef<HTMLAudioElement>(null);
 
     useEffect(() => {
         if (audioRef.current && music.playing) {

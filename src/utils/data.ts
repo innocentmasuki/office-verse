@@ -43,8 +43,10 @@ export const walls: WallProps[] = [
     {x: (1450 * 2), y: 340, width: 10, height: 470, color: 'gray'},
 
     
-    // middle office 
+    // Kitchen border 
     {x: (1100 * 2), y: -300, width: 10, height: 650, color: 'gray'},
+
+    {x: (1450 * 2), y: -300, width: 10, height: 650, color: 'gray'},
     
 
     // Desks
@@ -58,10 +60,16 @@ export const walls: WallProps[] = [
     // Rubens's Desk Top Left
     {x: 20, y: 100, width: 130 * 2, height: 80, color: 'white'},
 
-    // Outside Desk
+    // Tumaini's Desk
+    {x: 230, y: 260, width: 220, height: 270, color: 'white'},
+
+    // Gift's Desk
+    {x: 750, y: 20, width: 220, height: 320, color: 'white'},
+
+    // Outside Desk inbetween office 01 and 02
     {x: (700 * 2), y: 450, width: 260, height: 400, color: 'white'},
 
-    // Outside Desk
+    // Patio Outside Desk
     {x: (300 * 2), y: 940, width: 550, height: 240, color: 'white'},
 
 

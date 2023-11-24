@@ -76,13 +76,17 @@ export const walls: WallProps[] = [
     {x: (1120 * 2), y: 350, width: 140, height: 170, color: 'white'},
 
     {x: (1300 * 2), y: 350, width: 140, height: 170, color: 'white'},
-    
 
     // Outside Desk inbetween office 01 and 02
     {x: (700 * 2), y: 450, width: 260, height: 400, color: 'white'},
 
     // Patio Outside Desk
     {x: (300 * 2), y: 940, width: 550, height: 240, color: 'white'},
+
+
+
+    // Bedroom
+    {x: (300 * 2), y: -640, width: 10, height: 650, color: 'gray'},
 
 
     // Swimming Pool
@@ -92,3 +96,17 @@ export const walls: WallProps[] = [
 
 
 
+// Define the zoom factor
+const zoomFactor = 0;
+
+// Define the amount to move down
+const moveDownAmount = 300;
+const moveRightAmount = 500;
+
+// Iterate through the existing walls array and both scale down and move everything down
+for (let i = 0; i < walls.length; i++) {
+    walls[i].x = walls[i].x * zoomFactor + moveRightAmount;
+    walls[i].y = walls[i].y * zoomFactor + moveDownAmount;
+    walls[i].width *= zoomFactor;
+    walls[i].height *= zoomFactor;
+}

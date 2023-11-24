@@ -88,7 +88,7 @@ export const walls: WallProps[] = [
     // Swimming Pool
     {x: (500 * 2), y: (700 * 2), width: (600 * 2), height: 400, color: 'aqua', passable: true, name: 'swimming-pool'},
 
-    {x: (0), y: (700 * 4), width: 400, height: 560, color: 'aqua', passable: true, name: 'chess-board', children: <div dangerouslySetInnerHTML={{__html: '<iframe style="width: 400px; height: 560px;" src="https://www.chess.com/daily_puzzle" frameborder="0"></iframe>'}}/>},
+    // {x: (0), y: (700 * 4), width: 400, height: 560, color: 'aqua', passable: true, name: 'chess-board', children: <div dangerouslySetInnerHTML={{__html: '<iframe style="width: 400px; height: 560px;" src="https://www.chess.com/daily_puzzle" frameborder="0"></iframe>'}}/>},
 
 ];
 

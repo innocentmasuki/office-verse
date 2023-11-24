@@ -1,6 +1,6 @@
 'use client'
 
-import React, {useEffect, useState, KeyboardEvent} from 'react';
+import React, {useEffect, useState, KeyboardEvent, useRef} from 'react';
 import {Wall, WallProps} from "@/components/game/wall";
 import {Character, CHARACTER_HEIGHT, CHARACTER_WIDTH, CharacterProps} from "@/components/game/character";
 import {v4 as uuidv4} from 'uuid';
@@ -12,7 +12,9 @@ type GameProps = {
     walls: WallProps[];
 };
 
-export const gameSocket = io(process.env.NODE_ENV === "development" ? "http://localhost:3000" : "http://officeverse.com", { path: '/socket.io/' });
+
+
+export const gameSocket =process.env.NODE_ENV === "development" ? io( "http://localhost:3001") : io("http://10.0.254.254", { path: '/socket.io/' });
 
 export const Game: React.FC<GameProps> = ({ walls}) => {
 
@@ -20,7 +22,7 @@ export const Game: React.FC<GameProps> = ({ walls}) => {
     const [windowWidth, setWindowWidth] = useState(0);
     const [windowHeight, setWindowHeight] = useState(0);
     const [messages, setMessages] = useState<{message:string;sender:CharacterProps}[]>([]);
-
+    const [music, setMusic] = useState({playing:false,src:""})
     const [character, setCharacter] = useState<CharacterProps>({
         id: "",
         name: "",
@@ -39,6 +41,18 @@ export const Game: React.FC<GameProps> = ({ walls}) => {
     } | undefined>(undefined)
 
     const [direction, setDirection] = useState<"right" | "left">("right")
+
+    const audioRef = useRef<HTMLAudioElement>(null);
+
+    useEffect(() => {
+        if (audioRef.current && music.playing) {
+            //ts-ignore
+            audioRef.current.volume = 0.5;
+            audioRef.current.play().catch((error:any) => console.error('Audio Play Error:', error));
+        }
+    }, [music]);
+
+
 
 
     useEffect(() => {
@@ -68,13 +82,34 @@ export const Game: React.FC<GameProps> = ({ walls}) => {
 
     const isColliding = (newPosition: { x: number; y: number }) => {
         for (let wall of walls) {
-            if(wall.passable === true){
-                continue
-            }
-            if (newPosition.x < wall.x + wall.width &&
+            const inside = newPosition.x >= wall.x &&
+                newPosition.x + CHARACTER_WIDTH <= wall.x + wall.width &&
+                newPosition.y >= wall.y &&
+                newPosition.y + CHARACTER_HEIGHT <= wall.y + wall.height;
+
+            const colliding = newPosition.x < wall.x + wall.width &&
                 newPosition.x + CHARACTER_WIDTH > wall.x &&
                 newPosition.y < wall.y + wall.height &&
-                newPosition.y + CHARACTER_HEIGHT > wall.y) {
+                newPosition.y + CHARACTER_HEIGHT > wall.y
+
+
+
+            if(wall.passable === true){
+                if(inside){
+                    switch (wall.name) {
+                        case "swimming-pool":
+                            setMusic({playing:true,src:"/audio/swiming-pool.mp3"})
+                            break;
+                        default:
+                            setMusic({playing:false,src:""})
+                            break;
+                    }
+                }else{
+                    setMusic({playing:false,src:""})
+                }
+                continue
+            }
+            if (colliding) {
                 return true;
             }
         }
@@ -119,7 +154,7 @@ export const Game: React.FC<GameProps> = ({ walls}) => {
 
 
     function handleJoinRoom({characters, room}: { characters: CharacterProps[]; room: string }) {
-        console.log('Joining room', room);
+        // console.log('Joining room', room);
         setCurrentRoom({room, characters})
     }
 
@@ -151,10 +186,7 @@ export const Game: React.FC<GameProps> = ({ walls}) => {
     }, []);
 
 
-    useEffect(() => {
-        // console.clear()
-        console.log(characters)
-    }, [characters]);
+
 
 
 
@@ -221,6 +253,7 @@ export const Game: React.FC<GameProps> = ({ walls}) => {
 
 
 
+
     return (
         <div
             tabIndex={0}
@@ -267,6 +300,10 @@ export const Game: React.FC<GameProps> = ({ walls}) => {
 
 
                 </div>}
+            {music.playing &&  <audio  ref={audioRef} src={music.src} autoPlay loop>
+                Your browser does not support the audio element.
+            </audio>}
+
         </div>
     );
 };

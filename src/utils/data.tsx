@@ -1,4 +1,4 @@
-import {WallProps} from "@/components/game/wall";
+import {WallProps} from "@/components/game/components/wall";
 
 
 export const walls: WallProps[] = [
@@ -68,7 +68,7 @@ export const walls: WallProps[] = [
 
 
     // Desks in office 02
-    
+
     {x: (1300 * 2), y: 630, width: 140, height: 170, color: 'white'},
 
     {x: (1120 * 2), y: 630, width: 140, height: 170, color: 'white'},
@@ -90,23 +90,23 @@ export const walls: WallProps[] = [
 
 
     // Swimming Pool
-    {x: (500 * 2), y: (700 * 2), width: (600 * 2), height: 400, color: 'aqua', passable: true},
+    {x: (500 * 2), y: (700 * 2), width: (600 * 2), height: 400, color: 'aqua', passable: true , name:"swimming-pool"},
 
 ];
 
 
 
 // Define the zoom factor
-const zoomFactor = 0;
+// const zoomFactor = 0;
 
 // Define the amount to move down
-const moveDownAmount = 300;
-const moveRightAmount = 500;
-
-// Iterate through the existing walls array and both scale down and move everything down
-for (let i = 0; i < walls.length; i++) {
-    walls[i].x = walls[i].x * zoomFactor + moveRightAmount;
-    walls[i].y = walls[i].y * zoomFactor + moveDownAmount;
-    walls[i].width *= zoomFactor;
-    walls[i].height *= zoomFactor;
-}
+// const moveDownAmount = 300;
+// const moveRightAmount = 500;
+//
+// // Iterate through the existing walls array and both scale down and move everything down
+// for (let i = 0; i < walls.length; i++) {
+//     walls[i].x = walls[i].x * zoomFactor + moveRightAmount;
+//     walls[i].y = walls[i].y * zoomFactor + moveDownAmount;
+//     walls[i].width *= zoomFactor;
+//     walls[i].height *= zoomFactor;
+// }

@@ -1,7 +1,7 @@
 'use client'
 
 import React, {useEffect, useState, KeyboardEvent, useRef} from 'react';
-import {Wall, WallProps} from "@/components/game/wall";
+import {Wall, WallProps} from "@/components/game/components/wall";
 import {Character, CHARACTER_HEIGHT, CHARACTER_WIDTH, CharacterProps} from "@/components/game/character";
 import {v4 as uuidv4} from 'uuid';
 import {Chats} from "@/components/game/chats";
@@ -13,16 +13,15 @@ type GameProps = {
 };
 
 
+export const gameSocket = process.env.NODE_ENV === "development" ? io("http://localhost:3001") : io("http://10.0.254.254", {path: '/socket.io/'});
 
-export const gameSocket =process.env.NODE_ENV === "development" ? io( "http://localhost:3001") : io("http://10.0.254.254", { path: '/socket.io/' });
+export const Game: React.FC<GameProps> = ({walls}) => {
 
-export const Game: React.FC<GameProps> = ({ walls}) => {
-
-    const speed: number = 20;
+    const speed: number = 15;
     const [windowWidth, setWindowWidth] = useState(0);
     const [windowHeight, setWindowHeight] = useState(0);
-    const [messages, setMessages] = useState<{message:string;sender:CharacterProps}[]>([]);
-    const [music, setMusic] = useState({playing:false,src:""})
+    const [messages, setMessages] = useState<{ message: string; sender: CharacterProps }[]>([]);
+    const [music, setMusic] = useState({playing: false, src: ""})
     const [character, setCharacter] = useState<CharacterProps>({
         id: "",
         name: "",
@@ -48,11 +47,9 @@ export const Game: React.FC<GameProps> = ({ walls}) => {
         if (audioRef.current && music.playing) {
             //ts-ignore
             audioRef.current.volume = 0.5;
-            audioRef.current.play().catch((error:any) => console.error('Audio Play Error:', error));
+            audioRef.current.play().catch((error: any) => console.error('Audio Play Error:', error));
         }
     }, [music]);
-
-
 
 
     useEffect(() => {
@@ -66,18 +63,17 @@ export const Game: React.FC<GameProps> = ({ walls}) => {
 
     useEffect(() => {
         const char = localStorage.getItem("character")
-        if(char){
+        if (char) {
             setCharacter(JSON.parse(char))
         }
         setGameLoading(false)
     }, []);
 
     useEffect(() => {
-        if(character.id){
-            gameSocket.emit('newUser',character)
+        if (character.id) {
+            gameSocket.emit('newUser', character)
         }
     }, [character]);
-
 
 
     const isColliding = (newPosition: { x: number; y: number }) => {
@@ -93,19 +89,19 @@ export const Game: React.FC<GameProps> = ({ walls}) => {
                 newPosition.y + CHARACTER_HEIGHT > wall.y
 
 
-
-            if(wall.passable === true){
-                if(inside){
+            if (wall.passable === true) {
+                if (inside) {
+                    console.log(wall.name)
                     switch (wall.name) {
                         case "swimming-pool":
-                            setMusic({playing:true,src:"/audio/swiming-pool.mp3"})
+                            setMusic({playing: true, src: "/audio/swiming-pool.mp3"})
                             break;
                         default:
-                            setMusic({playing:false,src:""})
+                            setMusic({playing: false, src: ""})
                             break;
                     }
-                }else{
-                    setMusic({playing:false,src:""})
+                } else {
+                    setMusic({playing: false, src: ""})
                 }
                 continue
             }
@@ -139,8 +135,10 @@ export const Game: React.FC<GameProps> = ({ walls}) => {
 
         if (!isColliding(newPosition)) {
             setCharacter(prev => ({...prev, position: newPosition}));
+            localStorage.setItem("character", JSON.stringify({...character, position: newPosition}))
         }
     };
+
 
 
     useEffect(() => {
@@ -163,8 +161,6 @@ export const Game: React.FC<GameProps> = ({ walls}) => {
     }
 
 
-
-
     useEffect(() => {
         gameSocket.on('connect', () => {
             console.log("User connected")
@@ -175,7 +171,7 @@ export const Game: React.FC<GameProps> = ({ walls}) => {
         });
         gameSocket.on('receiveMessage', (message) => {
             console.log(message)
-            setMessages(prev=>[...prev,message])
+            setMessages(prev => [...prev, message])
         });
 
         return () => {
@@ -186,15 +182,13 @@ export const Game: React.FC<GameProps> = ({ walls}) => {
     }, []);
 
 
-
-
-
-
-    if(gameLoading){
-        return <div className={"h-screen w-screen flex flex-col justify-center items-center"}> <div>Loading...</div></div>
+    if (gameLoading) {
+        return <div className={"h-screen w-screen flex flex-col justify-center items-center"}>
+            <div>Loading...</div>
+        </div>
     }
 
-    function moveToFirst(array:CharacterProps[], id:string) {
+    function moveToFirst(array: CharacterProps[], id: string) {
         const index = array.findIndex(item => item.id === id); // id is a string
 
         if (index !== -1) {
@@ -203,7 +197,7 @@ export const Game: React.FC<GameProps> = ({ walls}) => {
         }
 
         return array;
-        }
+    }
 
 
     if (!character.id) {
@@ -240,8 +234,8 @@ export const Game: React.FC<GameProps> = ({ walls}) => {
                             onClick={() => {
                                 const newChar = {...character, id: uuidv4()}
                                 setCharacter(newChar)
-                                localStorage.setItem("character",JSON.stringify(newChar))
-                                }}>Submit
+                                localStorage.setItem("character", JSON.stringify(newChar))
+                            }}>Submit
                     </button>
                 </div>
             </div>)
@@ -250,8 +244,6 @@ export const Game: React.FC<GameProps> = ({ walls}) => {
     function handleToggleChat() {
         setShowChat(prev => !prev)
     }
-
-
 
 
     return (
@@ -266,7 +258,7 @@ export const Game: React.FC<GameProps> = ({ walls}) => {
             {walls.map((wall, index) => (
                 <Wall wall={wall} key={index}/>
             ))}
-            {moveToFirst(characters,character.id).map((character, index) => {
+            {moveToFirst(characters, character.id).map((character, index) => {
                 return (
                     <Character onToggleChat={handleToggleChat} index={index}
                                direction={direction}
@@ -276,31 +268,30 @@ export const Game: React.FC<GameProps> = ({ walls}) => {
                                character={character} otherCharacters={characters}/>
                 )
             })}
-            {showChat  &&
+            {showChat &&
                 <div className={"fixed border-l-2 border-black bottom-0 h-full w-1/4 right-0 bg-white p-4"}>
                     <div className='flex flex-col justify-start h-full'>
-                    <div className={"w-full flex flex-row justify-between items-center"}>
-                        <button onClick={handleToggleChat}
-                                className={"p-1  rounded-full duration-150 bg-black text-white"}><IoCloseSharp />
-                        </button>
-                        <span className={"font-bold whitespace-normal"}>Chat</span>
-                        <div className={"flex flex-row items-center gap-2"}>
-                            <button className={"p-2 rounded-full hover:bg-gray-200 duration-150"}><IoCall /></button>
-                            <button className={"p-2 rounded-full hover:bg-gray-200 duration-150"}><IoVideocam /></button>
+                        <div className={"w-full flex flex-row justify-between items-center"}>
+                            <button onClick={handleToggleChat}
+                                    className={"p-1  rounded-full duration-150 bg-black text-white"}><IoCloseSharp/>
+                            </button>
+                            <span className={"font-bold whitespace-normal"}>Chat</span>
+                            <div className={"flex flex-row items-center gap-2"}>
+                                <button className={"p-2 rounded-full hover:bg-gray-200 duration-150"}><IoCall/></button>
+                                <button className={"p-2 rounded-full hover:bg-gray-200 duration-150"}><IoVideocam/>
+                                </button>
 
+                            </div>
                         </div>
-                        </div>
-                    <div
-                        className={"font-bold text-xs pt-3 text-center w-full whitespace-normal truncate"}>{currentRoom?.characters[0].name} - {currentRoom?.characters[1].name}</div>
+                        <div
+                            className={"font-bold text-xs pt-3 text-center w-full whitespace-normal truncate"}>{currentRoom?.characters[0].name} - {currentRoom?.characters[1].name}</div>
 
-
-                    <Chats user={character} messages={messages} roomId={currentRoom?.room!}/>
+                        <Chats user={character} messages={messages} roomId={currentRoom?.room!}/>
                     </div>
 
 
-
                 </div>}
-            {music.playing &&  <audio  ref={audioRef} src={music.src} autoPlay loop>
+            {music.playing && <audio ref={audioRef} src={music.src} autoPlay loop>
                 Your browser does not support the audio element.
             </audio>}
 

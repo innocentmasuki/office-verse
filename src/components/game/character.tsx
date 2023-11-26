@@ -47,6 +47,44 @@ export const Character = ({
     const eyeContainerRef = useRef(null);
 
 
+    const scrollToCenter = (id:string) => {
+        const element = document.getElementById(id);
+
+        if (element) {
+            const elementRect = element.getBoundingClientRect();
+            const viewportWidth = window.innerWidth;
+            const viewportHeight = window.innerHeight;
+
+            let targetX = window.scrollX + elementRect.left - (viewportWidth - elementRect.width) / 2;
+            let targetY = window.scrollY + elementRect.top - (viewportHeight - elementRect.height) / 2;
+
+            // Ensure target coordinates are not less than 0
+            targetX = Math.max(0, targetX);
+            targetY = Math.max(0, targetY);
+
+            // Adjust for cases where the div is larger than the viewport
+            if (elementRect.width > viewportWidth) {
+                targetX = window.scrollX + elementRect.left;
+            }
+            if (elementRect.height > viewportHeight) {
+                targetY = window.scrollY + elementRect.top;
+            }
+
+            window.scrollTo({
+                top: targetY,
+                left: targetX,
+                behavior: 'smooth'
+            });
+        }
+    };
+
+
+
+    useEffect(() => {
+            scrollToCenter(character.id);
+    }, [character.position]);
+
+
     useEffect(() => {
         const handleMouseMove = (e: { clientX: number; clientY: number; }) => {
             // @ts-ignore
@@ -110,7 +148,7 @@ export const Character = ({
             gameSocket.emit('leaveRoom', {room: createCommonRoomName(character.name, otherCharacter?.name!)});
             onLeaveRoom();
         }
-       
+
     }, [character.name, interactionStatus, otherCharacter?.name]);
 
     return (
@@ -122,7 +160,7 @@ export const Character = ({
             }} onClick={onToggleChat} className={"cursor-pointer"}>
                 <PiChatTeardropDotsFill  className={"-mt-[35px] ml-[70px] h-[40px] w-[40px]"}/>
             </div>}
-            <div
+            <div id={character.id}
                 style={{
                     position: 'absolute',
                     left: character.position.x,
@@ -133,6 +171,7 @@ export const Character = ({
                     width: CHARACTER_WIDTH,
                     height: CHARACTER_HEIGHT,
                     backgroundColor: character.color,
+                    transition: "all 0.2s ease-in-out",
                 }}
                      className={`relative group  p-2 rounded-b rounded-t-2xl ${(index === 0 && direction === "left" ? "rounded-tl-3xl" : "rounded-tr-3xl")}   border-2 border-black`}>
                     <div
